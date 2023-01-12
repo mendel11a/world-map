@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup } from "react-simple-maps";
 import { Tooltip as ReactTooltip } from 'react-tooltip';
-import Flag from 'lyef-flags';
+import Tippy from '@tippyjs/react';
+import Swal from 'sweetalert2';
 
 import styled from 'styled-components';
+import axios from "axios";
 
 const Container = styled.div`
     font-size: 0.5rem;
@@ -18,27 +20,34 @@ const Container = styled.div`
         fill: grey;
     }
 `
-const Text = styled.text`
-    
-`
+
+
 const Map = () => {
     const [content, setContent] = useState("")
+    const [data, setData] = useState([]);
 
-    const average = (arr) => {
-        var ave_x = 0;
-        var ave_y = 0;
+    useEffect(() => {
+        const fetchData = async () => {
+            const res = await axios.get(`/countries`);
+            setData(res.data);
+        };
+        fetchData();
+    }, []);
 
-        arr.forEach((item) => { ave_x += item[0] })
-        arr.forEach((item) => { ave_y += item[1] })
-        const x = ave_x / arr.length
-        const y = ave_y / arr.length
-        return [x, y]
+    const makeAlert = (name, lon, lat, flag) => {
+        Swal.fire({
+            title: name,
+            text: `Lon: ${lon}\n Lat: ${lat}`,
+            imageUrl: flag,
+            imageWidth: 400,
+            imageHeight: 200,
+            imageAlt: 'Custom image',
+        })
     }
+
     const geoUrl =
         "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json"
 
-    const capital =
-        "http://techslides.com/demos/country-capitals.json"
     return (
         <Container>
             <ReactTooltip>{content}</ReactTooltip>
@@ -48,51 +57,41 @@ const Map = () => {
                         {({ geographies }) =>
                             geographies.map((geo) => (
                                 <>
-                                    {/* <Marker coordinates={average(geo.geometry.coordinates[0])}>
-                                        <Text textAnchor="middle" fill="#F53">
-                                            {geo.properties["name"]}
-                                        </Text>
-                                        <ReactCountryFlag countryCode={geo.properties["Alpha-2"]} />
-                                    </Marker> */}
-                                    <Geography
-                                        key={geo.rsmKey}
-                                        geography={geo}
-                                        onMouseEnter={() => {
-                                            setContent(`${geo.properties.name}`)
-                                        }}
-                                        onMouseLeave={() => {
-                                            setContent("")
-                                        }}
-                                        style={{
-                                            hover: {
-                                                fill: "#DDD",
-                                                outline: "none",
-                                                cursor: "pointer",
-                                                stroke: "#FFF"
-                                            }
-
-                                        }}
-                                    />
+                                    <Tippy key={geo.rsmKey}
+                                        content={content}>
+                                        <Geography
+                                            key={geo.rsmKey}
+                                            geography={geo}
+                                            onMouseEnter={() => {
+                                                setContent(`${geo.properties.name}`)
+                                            }}
+                                            onMouseLeave={() => {
+                                                setContent("")
+                                            }}
+                                            style={{
+                                                default: {
+                                                    fill: "#D6D6DA",
+                                                    outline: "none"
+                                                },
+                                                hover: {
+                                                    fill: "#DDD",
+                                                    outline: "none",
+                                                    cursor: "pointer",
+                                                    stroke: "#FFF"
+                                                }
+                                            }}
+                                        />
+                                    </Tippy>
                                 </>
                             ))
                         }
                     </Geographies>
-                    <Geographies geography={geoUrl}  >
-                        {({ geographies }) =>
-                            geographies.map((geo) => (
-                                <Marker key={geo.rsmKey} coordinates={average(geo.geometry.coordinates[0])}>
-                                    <Text textAnchor="middle" fill="white">
-                                        {/* {geo.properties["name"]} */}
-                                        <img src={"https://flagcdn.com/us.svg"}/>
-                                    {geo.properties["Alpha-2"]?.toLowerCase()}
-                                    </Text>
-                                    
-                                </Marker>
-                            )
-                            )
-                        }
-                    </Geographies>
-
+                    {data.map(({ name, lon, lat, flag }) => (
+                        <Marker key={name} coordinates={[lon, lat]}>
+                            <image onClick={() => makeAlert(name, lon, lat, flag)} key={name} href={flag} height="7" width="7" cursor="pointer" />
+                        </Marker>
+                    )
+                    )}
                 </ZoomableGroup>
             </ComposableMap>
         </Container>
@@ -100,3 +99,4 @@ const Map = () => {
 }
 
 export default Map
+

@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components';
 import { Link } from "react-router-dom";
-
 import World from "../img/world.jpg";
 
 const Container = styled.div`
@@ -25,18 +24,16 @@ const Wrapper = styled.div`
 
 const Logo = styled.div`
   display: flex;
+  font-size: 2.5rem;
   align-items: center;
-  gap: 5px;
+  gap: 0.5rem;
   font-weight: bold;
-
 `;
 
 const Img = styled.img`
-  height: 25px;
+  height: 3rem;
   border-radius: 50%;
 `;
-
-
 
 const Navbar = () => {
   return (

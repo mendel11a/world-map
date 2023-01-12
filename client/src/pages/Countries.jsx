@@ -8,7 +8,6 @@ import axios from "axios";
 const Container = styled.div`
     position: sticky;
     top: 0;
-    /* height: 2rem; */
     height: 100%;
     width: 100%;
 `
@@ -16,20 +15,20 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-
   padding: 0rem 1.3rem;
   position: relative;
 `;
 
 const Search = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   width: 40%;
   position: absolute;
   left: 0rem;
   right: 0rem;
   margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  margin-top: 1rem;
   padding: 0.3rem;
   border: 1px solid #ccc;
   border-radius: 3px;
@@ -51,7 +50,6 @@ const Countries = () => {
     useEffect(() => {
         const fetchData = async () => {
           const res = await axios.get(`/countries?c=${query}`);
-          console.log(res.data);
           setData(res.data);
           setOpen(false);
         };
@@ -67,7 +65,7 @@ const Countries = () => {
                     <SearchOutlinedIcon cursor="pointer" />
                 </Search>
             </Wrapper>
-            <Table countries={data} query={query} setOpen={setOpen}/>
+            <Table countries={data} query={query} setOpen={setOpen} setCountries={setData}/>
         </Container>
     )
 }

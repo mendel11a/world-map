@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import axios from "axios"
 import { useNavigate } from 'react-router-dom';
-import World from "../img/world.jpg";
 
 const Container = styled.div`
     display: flex;
@@ -11,8 +10,8 @@ const Container = styled.div`
     width: 70vh;
     height: 70vh;
     top: 0;
+    right:13rem;
     position: absolute;
-    /* background-color: #00000097; */
     background-repeat:no-repeat;
     background-size:contain;
     background-image: url(https://pbs.twimg.com/profile_images/587949417577066499/3uCD4xxY_400x400.jpg);
@@ -84,7 +83,6 @@ const EditCountry = ({ setOpen, country, setUpdate }) => {
             navigate('/')
         }
         catch(err){
-            // dispatch(changePictureFailure())
         }
     }
 
