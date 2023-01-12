@@ -2,21 +2,21 @@ import React from 'react'
 import styled from 'styled-components'
 import Table from "../components/Table";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from "axios";
-import { Users } from "../users";
 
 const Container = styled.div`
     position: sticky;
     top: 0;
-    height: 2rem;
+    /* height: 2rem; */
+    height: 100%;
+    width: 100%;
 `
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
+
   padding: 0rem 1.3rem;
   position: relative;
 `;
@@ -43,43 +43,21 @@ const Input = styled.input`
   outline: none;
 `;
 
-
-
-///////////////////////SEARCH ON A DATATABLE
-
-// function App() {
-//   const [query, setQuery] = useState("");
-//   const keys = ["first_name", "last_name", "email"];
-//   const search = (data) => {
-//     return data.filter((item) =>
-//       keys.some((key) => item[key].toLowerCase().includes(query))
-//     );
-//   };
-// return (
-//   <div className="app">
-//       <input
-//         className="search"
-//         placeholder="Search..."
-//         onChange={(e) => setQuery(e.target.value.toLowerCase())}
-//       />
-//     {<Table data={Search(Users)} />}
-//   </div>
-// );
-// }
-
-
-
 const Countries = () => {
     const [query, setQuery] = useState("");
-    const [users, setUsers] = useState([]);
+    const [data, setData] = useState([]);
+    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await axios.get(`http://localhost:5000?q=${query}`);
-            setUsers(res.data);
+          const res = await axios.get(`/countries?c=${query}`);
+          console.log(res.data);
+          setData(res.data);
+          setOpen(false);
         };
-        if (query.length === 0 || query.length > 2) fetchData();
-    }, [query]);
+        fetchData();
+      }, [query,open]);
+
 
     return (
         <Container>
@@ -89,7 +67,7 @@ const Countries = () => {
                     <SearchOutlinedIcon cursor="pointer" />
                 </Search>
             </Wrapper>
-            <Table countries={Users} query={query}/>
+            <Table countries={data} query={query} setOpen={setOpen}/>
         </Container>
     )
 }

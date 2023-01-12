@@ -1,23 +1,32 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios';
+import EditCountry from './EditCountry';
 import styled from 'styled-components';
 
 const Container = styled.div`
     margin-top: 2rem;
+    padding: 2rem 1rem;
+    height: 100%;
+    width: 100%;
 `;
 
-const TableContent= styled.table``
-const TableBody= styled.tbody``
-const Tabletr= styled.tr`
+const TableContent = styled.table``
+const TableBody = styled.tbody``
+const Tabletr = styled.tr`
     color: #aaaaaa;
-
 `
-const Tableth= styled.th`
+const Tableth = styled.th`
     color: white;
 `
-const Tabletd= styled.td`
-    padding: 0.5rem 3rem;
+const Tabletd = styled.td`
+    padding: 0.5rem 6rem;
     left: 2rem;
 `
+const Img = styled.img`
+    height: 25px;
+    width: 40px;
+`;
+
 
 const Buttons = styled.div`
     display: flex;
@@ -39,33 +48,50 @@ const Button = styled.button`
   gap: 5px;
 `;
 
-const Table = ({ countries , query }) => {
+const Table = ({ countries, query, setOpen }) => {
+    const [openEdit, setOpenEdit] = useState(false)
+    const [country, setCountry] = useState("")
+
+    const handleDelete = async (name) => {
+        try {
+            await axios.delete(`/countries/${name}`)
+            setOpen(true)
+        }
+        catch (err) {
+            // dispatch(changePictureFailure())
+        }
+    }
+
     return (
-        <Container>
-            <TableContent>
-                <TableBody>
-                    <Tabletr>
-                       <Tableth>Country</Tableth> 
-                       <Tableth>Code</Tableth> 
-                       <Tableth>Flag</Tableth>
-                       <Tableth>Actions</Tableth>
-                    </Tabletr>
-                    {countries.filter(country=>country.first_name.toLowerCase().includes(query)).map((item) => (
-                        <Tabletr key={item.id}>
-                            <Tabletd>{item.first_name}</Tabletd>
-                            <Tabletd>{item.last_name}</Tabletd>
-                            <Tabletd>{item.email}</Tabletd>
-                            <Tabletd>
-                                <Buttons>
-                                    <Button>Edit</Button>
-                                    <Button>Delete</Button>
-                                </Buttons>
-                            </Tabletd>
+        <>
+            <Container>
+                <TableContent>
+                    <TableBody>
+                        <Tabletr>
+                            <Tableth>Country</Tableth>
+                            <Tableth>Code</Tableth>
+                            <Tableth>Flag</Tableth>
+                            <Tableth>Actions</Tableth>
                         </Tabletr>
-                    ))}
-                </TableBody>
-            </TableContent>
-        </Container>
+                        {countries.filter(country => country.name.toLowerCase().includes(query)).map((item) => (
+                            <Tabletr key={item.name}>
+                                <Tabletd>{item.name}</Tabletd>
+                                <Tabletd>{item.code}</Tabletd>
+                                <Tabletd>
+                                    <Img src={item.flag}></Img></Tabletd>
+                                <Tabletd>
+                                    <Buttons>
+                                        <Button onClick={() => { setOpenEdit(true); setCountry(item.name) }}>Edit</Button>
+                                        <Button onClick={() =>  handleDelete(item.name) }>Delete</Button>
+                                    </Buttons>
+                                </Tabletd>
+                            </Tabletr>
+                        ))}
+                    </TableBody>
+                </TableContent>
+            </Container>
+            {openEdit && <EditCountry setOpen={setOpenEdit} country={country} setUpdate={setOpen} />}
+        </>
     )
 }
 
