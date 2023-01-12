@@ -50,38 +50,34 @@ const Map = () => {
 
     return (
         <Container>
-            <ReactTooltip>{content}</ReactTooltip>
             <ComposableMap data-tip="">
                 <ZoomableGroup zoom={1}>
                     <Geographies geography={geoUrl}  >
                         {({ geographies }) =>
                             geographies.map((geo) => (
                                 <>
-                                    <Tippy key={geo.rsmKey}
-                                        content={content}>
-                                        <Geography
-                                            key={geo.rsmKey}
-                                            geography={geo}
-                                            onMouseEnter={() => {
-                                                setContent(`${geo.properties.name}`)
-                                            }}
-                                            onMouseLeave={() => {
-                                                setContent("")
-                                            }}
-                                            style={{
-                                                default: {
-                                                    fill: "#D6D6DA",
-                                                    outline: "none"
-                                                },
-                                                hover: {
-                                                    fill: "#DDD",
-                                                    outline: "none",
-                                                    cursor: "pointer",
-                                                    stroke: "#FFF"
-                                                }
-                                            }}
-                                        />
-                                    </Tippy>
+                                    <Geography
+                                        key={geo.rsmKey}
+                                        geography={geo}
+                                        onMouseEnter={() => {
+                                            setContent(`${geo.properties.name}`)
+                                        }}
+                                        onMouseLeave={() => {
+                                            setContent("")
+                                        }}
+                                        style={{
+                                            default: {
+                                                fill: "#D6D6DA",
+                                                outline: "none"
+                                            },
+                                            hover: {
+                                                fill: "#DDD",
+                                                outline: "none",
+                                                cursor: "pointer",
+                                                stroke: "#FFF"
+                                            }
+                                        }}
+                                    />
                                 </>
                             ))
                         }
