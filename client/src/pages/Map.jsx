@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup } from "react-simple-maps";
-import { Tooltip as ReactTooltip } from 'react-tooltip';
-import Tippy from '@tippyjs/react';
 import Swal from 'sweetalert2';
 
 import styled from 'styled-components';

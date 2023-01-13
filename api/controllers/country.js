@@ -5,9 +5,11 @@ export const addCountry = (req, res, next) => {
     db.query(q, [req.body.name], (err, data) => {
         if (err) return res.status(500).json(err)
         if (data.length) return res.status(409).json("Country already exists")
-        const q = "INSERT INTO countries (`name`,`code`,`flag`) VALUE (?)"
+        const q = "INSERT INTO countries (`name`,`code`,`flag`,`lon`,`lat`) VALUE (?)"
         const values = [
-            req.body.name, req.body.code, req.body.flag
+            req.body.name, req.body.code, req.body.flag,
+            req.body.lon,
+            req.body.lat
         ]
         db.query(q, [values], (err, data) => {
             if (err) return res.status(500).json(err)
